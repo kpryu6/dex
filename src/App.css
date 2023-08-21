@@ -1,0 +1,169 @@
+.App {
+  text-align: center;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 30px;
+  margin-right: 10px;
+}
+
+.headerItem {
+  margin-right: 20px;
+  font-size: 18px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.eth {
+  height: 25px;
+  margin-right: 10px;
+}
+
+.connectButton {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Swap.css */
+
+.tradeBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: #78b2f0;
+  border: 2px solid #21273a;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+}
+
+.tradeBoxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 90%;
+}
+
+.tradeBoxHeader h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cog {
+  font-size: 20px;
+  color: #888888;
+  cursor: pointer;
+}
+.cog:hover {
+  color: black;
+  rotate: 90deg;
+  cursor: pointer;
+}
+
+.inputs {
+  position: relative;
+}
+
+.switchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.switchArrow {
+  font-size: 24px;
+  color: #888888;
+}
+
+.assetOne,
+.assetTwo {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.assetLogo {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.tokenChoice {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tokenChoice:hover {
+  background-color: #f5f5f5;
+}
+
+.tokenLogo {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.tokenChoiceNames {
+  flex: 1;
+}
+
+.tokenName {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.tokenTicker {
+  font-size: 12px;
+  color: #888888;
+}
+
+.swapButton {
+  background-color: #1890ff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.swapButton:disabled {
+  background-color: #d9d9d9;
+  color: #888888;
+  cursor: not-allowed;
+}

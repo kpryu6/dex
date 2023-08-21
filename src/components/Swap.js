@@ -5,20 +5,49 @@ import {
   DownOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import "../css/Swap.css";
+
+import tokenList from "../tokenList.json";
 
 function Swap() {
   const [slippage, setSlippage] = useState(2.5);
   const [tokenOneAmount, setTokenOneAmount] = useState(null);
   const [tokenTwoAmount, setTokenTwoAmount] = useState(null);
+  const [tokenOne, setTokenOne] = useState(tokenList[0]);
+  const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [changeToken, setChangeToken] = useState(1);
 
   function handleSlippageChange(e) {
     setSlippage(e.target.value);
   }
 
   function changeAmount(e) {
-    setSlippage(e.target.value);
+    setTokenOneAmount(e.target.value);
   }
+
+  function switchTokens() {
+    const one = tokenOne;
+    const two = tokenTwo;
+    setTokenOne(two);
+    setTokenTwo(one);
+  }
+
+  // 1번 토큰 클릭하면 changeToken 1로 설정
+  function openModal(asset) {
+    setChangeToken(asset);
+    setIsOpen(true);
+  }
+
+  function modifyToken(i) {
+    if (changeToken === 1) {
+      setTokenOne(tokenList[i]);
+    } else {
+      setTokenTwo(tokenList[i]);
+    }
+    // 토큰 선택 시 창 닫기
+    setIsOpen(false);
+  }
+
   const settings = (
     <>
       <div>Slippage Tolerance</div>
@@ -32,25 +61,70 @@ function Swap() {
     </>
   );
   return (
-    <div className="tradeBox">
-      <div className="tradeBoxHeader">
-        <h4>Swap</h4>
-        <Popover
-          content={settings}
-          title="Settings"
-          trigger="click"
-          placement="bottomRight"
-        >
-          <SettingOutlined className="cog" />
-        </Popover>
+    <>
+      <Modal
+        open={isOpen}
+        footer={null}
+        onCancel={() => setIsOpen(false)}
+        title="Select a token"
+      >
+        <div className="modalContent">
+          {tokenList?.map((e, i) => {
+            return (
+              <div
+                className="tokenChoice"
+                key={i}
+                onClick={() => modifyToken(i)}
+              >
+                <img src={e.img} alt={e.ticker} className="tokenLogo" />
+                <div className="tokenChoiceNames">
+                  <div className="tokenName">{e.name}</div>
+                  <div className="tokenTicker">{e.ticker}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Modal>
+
+      <div className="tradeBox">
+        <div className="tradeBoxHeader">
+          <h4>Swap</h4>
+          <Popover
+            content={settings}
+            title="Settings"
+            trigger="click"
+            placement="bottomRight"
+          >
+            <SettingOutlined className="cog" />
+          </Popover>
+        </div>
+        <div className="inputs">
+          <Input
+            placeholder="0"
+            value={tokenOneAmount}
+            onChange={changeAmount}
+          />
+          <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
+          <div className="switchButton" onClick={switchTokens}>
+            <ArrowDownOutlined className="switchArrow" />
+          </div>
+          <div className="assetOne" onClick={() => openModal(1)}>
+            <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
+            {tokenOne.ticker}
+            <DownOutlined />
+          </div>
+          <div className="assetTwo" onClick={() => openModal(2)}>
+            <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
+            {tokenTwo.ticker}
+            <DownOutlined />
+          </div>
+        </div>
+        <div className="swapButton" disabled={!tokenOneAmount}>
+          Swap
+        </div>
       </div>
-      <div className="inputs">
-        <Input placeholder="0" value={tokenOneAmount} onChange={changeAmount} />
-        <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
-        <div className="assetOne"></div>
-        <div className="assetTwo"></div>
-      </div>
-    </div>
+    </>
   );
 }
 export default Swap;
