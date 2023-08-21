@@ -11,7 +11,6 @@ function GetCoin() {
           headers: {
             "X-CMC_PRO_API_KEY": process.env.REACT_APP_COIN_API_KEY,
           },
-          mode: "no-cors",
         }
       );
 

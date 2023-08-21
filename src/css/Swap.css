@@ -1,0 +1,46 @@
+.tradeBox {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 20px;
+  background-color: #fff;
+  width: 400px;
+}
+
+.tradeBoxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cog {
+  font-size: 20px;
+  color: #1890ff;
+  cursor: pointer;
+}
+
+.inputs {
+  display: flex;
+}
+
+.inputs input {
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  margin-right: 10px;
+  width: 100%;
+}
+
+.assetOne {
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+  margin-right: 10px;
+}
+
+.assetTwo {
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+}
