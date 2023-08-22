@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+// BrowserRouter
 import { BrowserRouter } from "react-router-dom";
+import { configureChains, mainnet, WagmiConfig, createClient } from "wagmi";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
