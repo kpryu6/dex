@@ -6,7 +6,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #fff;
+  background-color: #cdcbe5;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -36,12 +36,18 @@ header {
 }
 
 .connectButton {
-  padding: 8px 16px;
-  border-radius: 20px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
+  background-color: #243056;
+  padding: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border-radius: 100px;
+  color: #5981f3;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.connectButton:hover {
   cursor: pointer;
+  color: #3b4874;
 }
 
 /* Swap.css */
@@ -49,13 +55,13 @@ header {
 .tradeBox {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   background-color: #78b2f0;
   border: 2px solid #21273a;
   border-radius: 10px;
   padding: 20px;
-  width: 400px;
+  width: 700px;
 }
 
 .tradeBoxHeader {
@@ -63,7 +69,7 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  width: 90%;
+  width: 50%;
 }
 
 .tradeBoxHeader h4 {
@@ -92,15 +98,20 @@ header {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background-color: #f0f0f0;
+  background-color: #3f2b61;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
+}
+.switchButton:hover {
+  transition: 0.5s;
+  rotate: 360deg;
   cursor: pointer;
 }
 
 .switchArrow {
   font-size: 24px;
-  color: #888888;
+  color: #f7f1f1;
 }
 
 .assetOne,
@@ -152,7 +163,7 @@ header {
 }
 
 .swapButton {
-  background-color: #1890ff;
+  background-color: #1a1c1e;
   color: white;
   font-size: 16px;
   font-weight: bold;
