@@ -1,4 +1,4 @@
 node_modules
-/back/env
-DS_Store
-gitgnore
+.env
+.DS_Store
+.gitignore
