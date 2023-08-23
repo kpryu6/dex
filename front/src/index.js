@@ -9,6 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 import { configureChains, mainnet, WagmiConfig, createConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
+// createConfig for wallet connection
 const { provider, webSocketProvider } = configureChains(
   [mainnet],
   [publicProvider()]
