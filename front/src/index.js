@@ -5,14 +5,30 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 // BrowserRouter
 import { BrowserRouter } from "react-router-dom";
-import { configureChains, mainnet, WagmiConfig, createClient } from "wagmi";
+// mainnet: mainnet ¼³Á¤
+import { configureChains, mainnet, WagmiConfig, createConfig } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+
+const { provider, webSocketProvider } = configureChains(
+  [mainnet],
+  [publicProvider()]
+);
+
+// web3 client
+const client = createConfig({
+  autoConnect: true,
+  provider,
+  webSocketProvider,
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <WagmiConfig config={client}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </WagmiConfig>
   </React.StrictMode>
 );
 
