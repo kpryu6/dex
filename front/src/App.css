@@ -6,13 +6,33 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #cdcbe5;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
 .left {
   display: flex;
   align-items: center;
+}
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.headerItem {
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.headerItem:hover {
+  background-color: rgb(228, 229, 230);
+  cursor: pointer;
 }
 
 .logo {
@@ -57,11 +77,13 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #78b2f0;
+  background-color: #c6ddf5;
   border: 2px solid #21273a;
   border-radius: 10px;
   padding: 20px;
   width: 700px;
+  margin: 0 auto; /* 중앙 정렬을 위한 속성 추가 */
+  margin-top: 50px; /* 필요한 경우 상단 여백 조정 */
 }
 
 .tradeBoxHeader {
@@ -73,6 +95,7 @@ header {
 }
 
 .tradeBoxHeader h4 {
+  margin-right: 50px;
   font-size: 18px;
   font-weight: bold;
 }
@@ -114,13 +137,47 @@ header {
   color: #f7f1f1;
 }
 
-.assetOne,
-.assetTwo {
+.assetOne {
+  position: absolute;
+  min-width: 80px;
+  height: 40px;
+  background-color: #3a4157;
+  top: 36px;
+  right: 20px;
+  border-radius: 10px;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  padding: 8px 10px;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  padding-right: 8px;
+  color: white;
+}
+
+.assetTwo {
+  position: absolute;
+  min-width: 80px;
+  height: 40px;
+  background-color: #3a4157;
+  top: 135px;
+  right: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  padding-right: 8px;
+  color: white;
+}
+
+.assetOne:hover {
+  cursor: pointer;
+}
+
+.assetTwo:hover {
   cursor: pointer;
 }
 
