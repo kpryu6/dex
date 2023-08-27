@@ -3,7 +3,9 @@ import logo from "../logo.svg";
 
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header(props) {
+  const { address, isConnected, connect } = props;
+
   return (
     <header>
       <div className="left">
@@ -13,9 +15,6 @@ function Header() {
         <Link to="/swap" className="link">
           <div className="headerItem">Swap</div>
         </Link>
-        <Link to="/tokens" className="link">
-          <div className="headerItem">Tokens</div>
-        </Link>
       </div>
 
       <div className="right">
@@ -23,7 +22,11 @@ function Header() {
           <img src={logo} alt="eth" className="eth" />
           Ethereum
         </div>
-        <div className="coonectButton">ConnectWallet</div>
+        <div className="connectButton" onClick={connect}>
+          {isConnected
+            ? address.slice(0, 4) + "..." + address.slice(38)
+            : "ConnectWallet"}
+        </div>
       </div>
     </header>
   );
