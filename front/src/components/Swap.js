@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Input, Modal } from "antd";
-import { ArrowDownOutlined, DownOutlined } from "@ant-design/icons";
+import { Input, Popover, Radio, Modal, message } from "antd";
+import {
+  ArrowDownOutlined,
+  DownOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import tokenList from "../tokenList.json";
 import axios from "axios";
 import { useSendTransaction, useWaitForTransaction } from "wagmi";
 
 function Swap(props) {
   const { address, isConnected } = props;
+  const [slippage, setSlippage] = useState(2.5);
   const [tokenOneAmount, setTokenOneAmount] = useState(null);
   const [tokenTwoAmount, setTokenTwoAmount] = useState(null);
   const [tokenOne, setTokenOne] = useState(tokenList[0]);
@@ -21,6 +26,10 @@ function Swap(props) {
     data: null,
     value: null,
   });
+
+  function handleSlippageChange(e) {
+    setSlippage(e.target.value);
+  }
 
   // transaction
   const { data, sendTransaction } = useSendTransaction({
@@ -89,20 +98,40 @@ function Swap(props) {
   // 1inch Approve API Swagger(https://portal.1inch.dev/documentation/swap/swagger)
   async function fetchDexSwap() {
     const allowance = await axios.get(
-      `https://api.1inch.dev/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
+      // 허용 여부 확인
+      `/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
     );
 
     // 허용이 되지 않았다면
     if (allowance.data.allowance === "0") {
       // tx Data get
       const approve = await axios.get(
-        `https://api.1inch.dev/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}`
+        // 토큰 access를 위한 거래 세부정보 가져오기
+        `/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}`
       );
       setTxDetails(approve.data);
+      console.log(approve.data);
       console.log("not approve");
       return;
     }
+
     console.log("make swap");
+
+    // "hello".padEnd(10, "0") => "hello00000" (10글자 만들기)
+    const tx = await axios.get(
+      `/swap/v5.2/1/swap?src=${tokenOne.address}&dst=${
+        tokenTwo.address
+      }&amount=${tokenOneAmount.padEnd(
+        tokenOne.decimals + tokenOneAmount.length,
+        "0"
+      )}&from=${address}&slippage=${slippage}`
+    );
+
+    // 거레소 가격이 계속 변동되므로 api로 받은 tx를 이용해 UI에 tokenTwo 변동가격 표시
+    let decimals = Number(`1E${tokenTwo.decimals}`);
+    setTokenTwoAmount((Number(tx.data.toTokenAmount) / decimals).toFixed(2));
+
+    setTxDetails(tx.data.tx);
   }
 
   // API 요청에 따른 결과 변경으로 useEffect로 tokenOne, tokenTwo 설정
@@ -115,6 +144,19 @@ function Swap(props) {
       sendTransaction();
     }
   }, [txDetails]);
+
+  const settings = (
+    <>
+      <div>Slippage Tolerance</div>
+      <div>
+        <Radio.Group value={slippage} onChange={handleSlippageChange}>
+          <Radio.Button value={0.5}>0.5%</Radio.Button>
+          <Radio.Button value={2.5}>2.5%</Radio.Button>
+          <Radio.Button value={5}>5.0%</Radio.Button>
+        </Radio.Group>
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -146,6 +188,14 @@ function Swap(props) {
       <div className="tradeBox">
         <div className="tradeBoxHeader">
           <h4>Swap</h4>
+          <Popover
+            content={settings}
+            title="Settings"
+            trigger="click"
+            placement="bottomRight"
+          >
+            <SettingOutlined className="cog" />
+          </Popover>
         </div>
         <div className="inputs">
           <div className="assetOne" onClick={() => openModal(1)}>
