@@ -7,7 +7,7 @@ module.exports = function (app) {
     createProxyMiddleware("/swap", {
       target: "https://api.1inch.dev",
       changeOrigin: true,
-      onProxyReq: (proxyReq, req, res) => {
+      onProxyReq: (proxyReq) => {
         // API key를 요청 헤더에 추가
         proxyReq.setHeader(
           "Authorization",
