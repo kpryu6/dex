@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "../logo.svg";
-import eth from "../eth.svg";
+import inch from "../img/inch.svg";
+import eth from "../img/eth.svg";
 
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,7 @@ function Header(props) {
     <header>
       <div className="left">
         <Link to="/" className="link">
-          <img src={logo} alt="logo" className="logo" />
+          <img src={inch} alt="logo" className="logo" />
         </Link>
         <Link to="/swap" className="link">
           <div className="headerItem">Swap</div>
