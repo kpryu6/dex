@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import tokenList from "../tokenList.json";
 import axios from "axios";
-import { useSendTransaction, useWaitForTransaction } from "wagmi";
+import { useSendTransaction } from "wagmi";
 
 function Swap(props) {
   const { address, isConnected } = props;
@@ -18,6 +18,7 @@ function Swap(props) {
   const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
   const [isOpen, setIsOpen] = useState(false);
   const [changeToken, setChangeToken] = useState(1);
+  const [messageApi, contextHolder] = message.useMessage();
   // backend에 요청 후 저장할 price
   const [prices, setPrices] = useState(null);
   // transaction 세부 정보
@@ -39,6 +40,11 @@ function Swap(props) {
       data: String(txDetails.data),
       value: String(txDetails.value),
     },
+  });
+
+  // https://wagmi.sh/react/hooks/useSendTransaction#return-value
+  const { isLoading, isSuccess } = useSendTransaction({
+    hash: data?.hash,
   });
 
   function changeAmount(e) {
@@ -85,7 +91,7 @@ function Swap(props) {
   }
 
   async function fetchPrices(one, two) {
-    const res = await axios.get(`http://localhost:3001/tokenPrices`, {
+    const res = await axios.get(`http://localhost:3001/tokenPrice`, {
       params: { addressOne: one, addressTwo: two },
     });
 
@@ -99,8 +105,10 @@ function Swap(props) {
   async function fetchDexSwap() {
     const allowance = await axios.get(
       // 허용 여부 확인
+      // 1inch 라우터가 사용할 수 있는 토큰 수 가져오기
       `/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
     );
+    console.log(allowance.data);
 
     // 허용이 되지 않았다면
     if (allowance.data.allowance === "0") {
@@ -131,6 +139,7 @@ function Swap(props) {
     let decimals = Number(`1E${tokenTwo.decimals}`);
     setTokenTwoAmount((Number(tx.data.toTokenAmount) / decimals).toFixed(2));
 
+    console.log(tx.data);
     setTxDetails(tx.data.tx);
   }
 
@@ -144,6 +153,38 @@ function Swap(props) {
       sendTransaction();
     }
   }, [txDetails]);
+
+  // loading
+  useEffect(() => {
+    messageApi.destroy();
+
+    if (isLoading) {
+      messageApi.open({
+        type: "loading",
+        content: "Transaction is Pending...",
+        duration: 0,
+      });
+    }
+  }, [isLoading]);
+
+  // success || failed
+  useEffect(() => {
+    messageApi.destroy();
+
+    if (isSuccess) {
+      messageApi.open({
+        type: "success",
+        content: "Transaction Successful",
+        duration: 1.5,
+      });
+    } else if (txDetails.to) {
+      messageApi.open({
+        type: "error",
+        content: "Transaction Failed",
+        duration: 1.5,
+      });
+    }
+  }, [isSuccess]);
 
   const settings = (
     <>
@@ -160,6 +201,7 @@ function Swap(props) {
 
   return (
     <>
+      {contextHolder}
       <Modal
         open={isOpen}
         footer={null}
