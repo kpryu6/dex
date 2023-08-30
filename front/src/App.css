@@ -100,6 +100,18 @@ header {
   font-weight: bold;
 }
 
+.cog {
+  margin-left: 150%;
+  color: #51586f;
+  transition: 0.3s;
+}
+
+.cog:hover {
+  color: black;
+  rotate: 180deg;
+  cursor: pointer;
+}
+
 .inputs {
   display: flex;
   flex-direction: column;
