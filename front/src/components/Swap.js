@@ -33,13 +33,12 @@ function Swap(props) {
   }
 
   // transaction
+  // wagmi 계속 Update하니까 확인하기
   const { data, sendTransaction } = useSendTransaction({
-    request: {
-      from: address,
-      to: String(txDetails.to),
-      data: String(txDetails.data),
-      value: String(txDetails.value),
-    },
+    from: address,
+    to: String(txDetails.to),
+    data: String(txDetails.data),
+    value: String(txDetails.value),
   });
 
   // https://wagmi.sh/react/hooks/useSendTransaction#return-value
@@ -95,7 +94,7 @@ function Swap(props) {
       params: { addressOne: one, addressTwo: two },
     });
 
-    // console.log(res.data);
+    //console.log(res.data);
     setPrices(res.data);
   }
 
@@ -105,26 +104,28 @@ function Swap(props) {
   async function fetchDexSwap() {
     const allowance = await axios.get(
       // 허용 여부 확인
-      // 1inch 라우터가 사용할 수 있는 토큰 수 가져오기
+      // 1inch 라우터가 사용할 수 있는 토큰 양 가져오기
       `/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
     );
     console.log(allowance.data);
 
-    // 허용이 되지 않았다면
+    // 허용이 되지 않았다면 1inch router가 토큰을 허용할 수 있도록 토큰에 대한 정보 부르기
     if (allowance.data.allowance === "0") {
       // tx Data get
       const approve = await axios.get(
-        // 토큰 access를 위한 거래 세부정보 가져오기
+        // 토큰 access를 위한 거래 세부정보 가져오기 & 토큰 무한으로 사용 허용
+        // /allowance 를 여기서 정해주기
         `/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}`
       );
       setTxDetails(approve.data);
-      console.log(approve.data);
+      console.log(txDetails);
       console.log("not approve");
       return;
     }
 
     console.log("make swap");
 
+    // 현재 오류
     // "hello".padEnd(10, "0") => "hello00000" (10글자 만들기)
     const tx = await axios.get(
       `/swap/v5.2/1/swap?src=${tokenOne.address}&dst=${
@@ -137,7 +138,9 @@ function Swap(props) {
 
     // 거레소 가격이 계속 변동되므로 api로 받은 tx를 이용해 UI에 tokenTwo 변동가격 표시
     let decimals = Number(`1E${tokenTwo.decimals}`);
-    setTokenTwoAmount((Number(tx.data.toTokenAmount) / decimals).toFixed(2));
+    setTokenTwoAmount((Number(tx.data.toAmount) / decimals).toFixed(2));
+    console.log(decimals);
+    console.log(tokenTwoAmount);
 
     console.log(tx.data);
     setTxDetails(tx.data.tx);
@@ -148,6 +151,7 @@ function Swap(props) {
     fetchPrices(tokenList[0].address, tokenList[1].address);
   }, []);
 
+  // sendTransaction 실행 조건
   useEffect(() => {
     if (txDetails.to && isConnected) {
       sendTransaction();
