@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import Swap from "./components/Swap";
+import Home from "./components/Home";
 
 import { Route, Routes } from "react-router-dom"; // 수정된 부분
 import "./App.css";
@@ -16,6 +17,7 @@ function App() {
       <Header connect={connect} isConnected={isConnected} address={address} />
       <div className="main">
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route
             path="/swap"
             /* 연결되었는지와 주소를 알기 위해 전달 */
