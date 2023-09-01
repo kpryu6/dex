@@ -103,5 +103,19 @@
     "name": "Decentraland",
     "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
     "decimals": 18
+  },
+  {
+    "ticker": "CYBER",
+    "img": null,
+    "name": "CyberConnect",
+    "address": "0x14778860e937f509e651192a90589de711fb88a9",
+    "decimals": 18
+  },
+  {
+    "ticker": "1INCH",
+    "img": "https://cdn.moralis.io/eth/0x111111111117dc0aa78b770fa6a738034120c302.png",
+    "name": "1INCH Token",
+    "address": "0x111111111117dC0aa78b770fA6A738034120C302",
+    "decimals": 18
   }
 ]
