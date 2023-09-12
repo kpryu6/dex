@@ -8,10 +8,11 @@ import { BrowserRouter } from "react-router-dom";
 // mainnet: mainnet ¼³Á¤
 import { configureChains, mainnet, WagmiConfig, createConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
+import { avalanche, bsc } from "@wagmi/chains";
 
 // createConfig for wallet connection
-const { provider, webSocketProvider } = configureChains(
-  [mainnet],
+const { provider, webSocketProvider, chains } = configureChains(
+  [mainnet, avalanche, bsc],
   [publicProvider()]
 );
 
@@ -20,6 +21,7 @@ const client = createConfig({
   autoConnect: true,
   provider,
   webSocketProvider,
+  chains,
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
