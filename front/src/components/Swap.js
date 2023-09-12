@@ -28,6 +28,11 @@ function Swap(props) {
     value: null,
   });
 
+  // Slippage : 주문한 가격과 실제 체결된 가격사이의 차이
+  // 가격이 큰 주문을 처리할 때 Slippage가 늘어날 가능성이 큼
+  // 하지만 Slippage를 0으로 가깝게 설정할 수록(거래를 빨리 처리해야하니까) 가스비가 올라감
+  // 가스비와 거래속도 사이에 적절한 균형을 맞출 필요가 있음.
+  // 거래 규모에 따라 Slippage Tolerance의 차이가 커질수록 가스비 차이도 커짐
   function handleSlippageChange(e) {
     setSlippage(e.target.value);
   }
@@ -46,6 +51,7 @@ function Swap(props) {
     hash: data?.hash,
   });
 
+  // input에 사용자가 value값 변경하면 실행
   function changeAmount(e) {
     setTokenOneAmount(e.target.value);
     // input 존재 && api로 받은 price 존재
@@ -94,13 +100,14 @@ function Swap(props) {
       params: { addressOne: one, addressTwo: two },
     });
 
-    //console.log(res.data);
+    console.log(res.data);
     setPrices(res.data);
   }
 
   // tx 보내고 있는지 확인
   // 1inch Network로 지갑에 있는 토큰을 교환하도록 승인받기
   // 1inch Approve API Swagger(https://portal.1inch.dev/documentation/swap/swagger)
+  // 1inch Aggregator : 주문에서 Slippage를 최소화하고, Swap gas비와 토큰 가격을 최적화함. 가능한 최고의 가격을 최단 시간내에 제공.
   async function fetchDexSwap() {
     const allowance = await axios.get(
       // 허용 여부 확인
@@ -125,33 +132,47 @@ function Swap(props) {
 
     console.log("make swap");
 
-    // 현재 오류
     // "hello".padEnd(10, "0") => "hello00000" (10글자 만들기)
-    const tx = await axios.get(
-      `/swap/v5.2/1/swap?src=${tokenOne.address}&dst=${
-        tokenTwo.address
-      }&amount=${tokenOneAmount.padEnd(
-        tokenOne.decimals + tokenOneAmount.length,
-        "0"
-      )}&from=${address}&slippage=${slippage}`
-    );
+    // Error 429 (Too many request) 로 setTimeout으로 속도 줄여주기
+    setTimeout(async () => {
+      const tx = await axios.get(
+        `/swap/v5.2/1/swap?src=${tokenOne.address}&dst=${
+          tokenTwo.address
+        }&amount=${tokenOneAmount.padEnd(
+          tokenOne.decimals + tokenOneAmount.length,
+          "0"
+        )}&from=${address}&slippage=${slippage}`
+      );
 
-    // 거레소 가격이 계속 변동되므로 api로 받은 tx를 이용해 UI에 tokenTwo 변동가격 표시
-    let decimals = Number(`1E${tokenTwo.decimals}`);
-    setTokenTwoAmount((Number(tx.data.toAmount) / decimals).toFixed(2));
-    console.log(decimals);
-    console.log(tokenTwoAmount);
+      /* Decimal 사용 이유
+       * 이더리움 블록체인에는 토큰 거래에 wei라는 단위를 사용한다고 함.
+       * 1ETH = 10^18(uint256) wei = 1e18 wei
+       * decimals = 해당 토큰의 소수점 자리 수 유효허용치
+       * decimal이 18인 경우 소수점 18자리 수까지 유효한 수량
+       * 1USDC = 1e6 wei = 10^6(uint256) wei
+       */
 
-    console.log(tx.data);
-    setTxDetails(tx.data.tx);
+      // tokenTwo.decimal이 6이라면 1E${tokenTwo.decimals}는 10의 6제곱
+      // Number은 숫자로 변환하겠다고 명시적으로 쓴거
+      let decimals = Number(`1E${tokenTwo.decimals}`);
+      // toAmount는 바꾸려고 하는 토큰의 양
+      // toFixed(2) : 소수 둘째자리 까지만 표현
+      setTokenTwoAmount((Number(tx.data.toAmount) / decimals).toFixed(2));
+      console.log(decimals);
+      console.log(tokenTwoAmount);
+      console.log("ST : ", slippage);
+      console.log(tx.data);
+      setTxDetails(tx.data.tx);
+    }, 1000);
   }
 
-  // API 요청에 따른 결과 변경으로 useEffect로 tokenOne, tokenTwo 설정
+  // 컴포넌트가 처음 마운트될 때 한번 실행
   useEffect(() => {
     fetchPrices(tokenList[0].address, tokenList[1].address);
   }, []);
 
   // sendTransaction 실행 조건
+  // txDetails가 변경될 때마다 useEffect 실행
   useEffect(() => {
     if (txDetails.to && isConnected) {
       sendTransaction();
@@ -267,6 +288,7 @@ function Swap(props) {
             <DownOutlined />
           </div>
           <Input
+            id="input"
             placeholder="0"
             value={tokenTwoAmount}
             onChange={changeAmount}
